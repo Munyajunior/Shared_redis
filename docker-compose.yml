@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  redis:
+    build: .
+    container_name: redis_server
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"  
+      REDIS_MAXMEMORY: "${REDIS_MAXMEMORY:-256mb}"
+      REDIS_MAXMEMORY_POLICY: "${REDIS_MAXMEMORY_POLICY:-allkeys-lru}"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
