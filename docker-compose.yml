@@ -2,15 +2,28 @@ version: "3.9"
 
 services:
   redis:
-    build: .
+    image: redis:7-alpine
     container_name: redis_server
     restart: unless-stopped
+
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
+      - --requirepass
+      - ${REDIS_PASSWORD}
+      - --maxmemory
+      - ${REDIS_MAXMEMORY}
+      - --maxmemory-policy
+      - ${REDIS_MAXMEMORY_POLICY}
+
     ports:
       - "6379:6379"
+
     environment:
-      REDIS_PASSWORD: "${REDIS_PASSWORD}"  
-      REDIS_MAXMEMORY: "${REDIS_MAXMEMORY:-256mb}"
-      REDIS_MAXMEMORY_POLICY: "${REDIS_MAXMEMORY_POLICY:-allkeys-lru}"
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_MAXMEMORY: ${REDIS_MAXMEMORY}
+      REDIS_MAXMEMORY_POLICY: ${REDIS_MAXMEMORY_POLICY}
+
     volumes:
       - redis_data:/data
 
