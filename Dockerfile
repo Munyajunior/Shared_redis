@@ -1,16 +1,13 @@
-# =============================
-# Dockerfile
-# =============================
+FROM redis:7.4-alpine
 
-FROM redis:7-alpine
+# Create directories
+RUN mkdir -p /usr/local/etc/redis /data
 
-LABEL maintainer="KHALID <ivojunior671@gmail.com>"
-
-# Copy custom Redis configuration
+# Copy redis config
 COPY redis.conf /usr/local/etc/redis/redis.conf
 
-# Expose Redis default port
+# Expose Redis port
 EXPOSE 6379
 
-# Start Redis with the configuration
-CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]
+# Start Redis (AUTH injected via command, not config)
+CMD ["sh", "-c", "redis-server /usr/local/etc/redis/redis.conf --requirepass \"$REDIS_PASSWORD\""]
